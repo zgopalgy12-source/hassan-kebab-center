@@ -19,6 +19,6 @@ Site de uma página em português de Portugal. Abre o `index.html` no navegador 
 
 ## Por confirmar
 
-- Horário completo por dia. A ficha fornecida indica fecho às 00:00.
+- Dias de funcionamento. O horário indicado é das 12:00 às 00:00.
 - Nomes, categorias e disponibilidade dos pratos. Preços e ingredientes podem ser acrescentados se o restaurante os fornecer.
 - Repositório e categoria do GitHub Discussions, se quiseres ativar os comentários Giscus.
