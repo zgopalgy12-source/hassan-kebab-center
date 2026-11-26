@@ -1,4 +1,4 @@
-# Hassan Kebab Center
+# hassan-kebab-center
 
 Site de uma página em português de Portugal. Abre o `index.html` no navegador para veres o site no computador.
 
