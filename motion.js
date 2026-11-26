@@ -1,10 +1,48 @@
 const hero = document.querySelector('.hero');
-const video = document.querySelector('#grelhador');
-const button = document.querySelector('#motion-control');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-let visible = true;
-let paused = false;
+const films = new Map([
+  film('#grelhador', '#motion-control'),
+  film('#wrap-video', '#wrap-motion-control')
+]);
 let frame = 0;
+
+function film(videoSelector, buttonSelector) {
+  const video = document.querySelector(videoSelector);
+  const button = document.querySelector(buttonSelector);
+  const section = video.closest('section');
+  const state = {video, button, visible: false, paused: false, ready: false};
+  video.addEventListener('playing', () => {
+    if (reduced.matches) return;
+    video.classList.add('playing');
+    button.hidden = false;
+  });
+  video.addEventListener('error', () => {
+    video.classList.remove('playing');
+    button.hidden = true;
+  });
+  button.addEventListener('click', () => {
+    state.paused = !state.paused;
+    button.textContent = state.paused ? 'Reproduzir vídeo' : 'Pausar vídeo';
+    playback(state);
+  });
+  return [section, state];
+}
+
+function playback(state) {
+  const {video, button, visible, paused, ready} = state;
+  if (reduced.matches) {
+    video.classList.remove('playing');
+    button.hidden = true;
+  } else {
+    button.hidden = !video.classList.contains('playing');
+  }
+  if (!ready || !visible || paused || reduced.matches || document.hidden) {
+    video.pause();
+    return;
+  }
+  if (!video.hasAttribute('src')) video.src = video.dataset.src;
+  video.play().catch(() => {});
+}
 
 function updateDepth() {
   frame = 0;
@@ -14,42 +52,34 @@ function updateDepth() {
 }
 
 function scheduleDepth() {
-  if (!frame && visible && !reduced.matches) frame = requestAnimationFrame(updateDepth);
+  if (!frame && films.get(hero).visible && !reduced.matches) frame = requestAnimationFrame(updateDepth);
 }
 
-function playback() {
-  if (reduced.matches || paused || !visible) {
-    video.pause();
-    return;
+const observer = new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    const state = films.get(entry.target);
+    state.visible = entry.isIntersecting && entry.intersectionRatio >= 0.15;
+    playback(state);
   }
-  if (!video.hasAttribute('src')) video.src = video.dataset.src;
-  video.play().catch(() => {});
+  scheduleDepth();
+}, {threshold: [0, 0.15]});
+
+for (const [section, state] of films) {
+  observer.observe(section);
+  const poster = state.video.parentElement.querySelector('img');
+  poster.decode().catch(() => {}).then(() => requestAnimationFrame(() => {
+    state.ready = true;
+    playback(state);
+  }));
 }
 
-video.addEventListener('playing', () => {
-  video.classList.add('playing');
-  button.hidden = reduced.matches;
-  button.textContent = 'Pausar vídeo';
-});
-video.addEventListener('error', () => {
-  video.classList.remove('playing');
-  button.hidden = true;
-});
-button.addEventListener('click', () => {
-  paused = !paused;
-  button.textContent = paused ? 'Reproduzir vídeo' : 'Pausar vídeo';
-  playback();
-});
 reduced.addEventListener('change', () => {
-  if (reduced.matches) video.classList.remove('playing');
-  button.hidden = reduced.matches || !video.classList.contains('playing');
-  playback();
+  for (const state of films.values()) {
+    if (!reduced.matches && state.paused && state.video.readyState >= 2) state.video.classList.add('playing');
+    playback(state);
+  }
   scheduleDepth();
 });
-new IntersectionObserver(([entry]) => {
-  visible = entry.isIntersecting;
-  playback();
-  scheduleDepth();
-}).observe(hero);
+document.addEventListener('visibilitychange', () => films.forEach(playback));
 addEventListener('scroll', scheduleDepth, {passive: true});
 addEventListener('resize', scheduleDepth);
