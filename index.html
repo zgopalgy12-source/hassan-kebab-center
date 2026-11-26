@@ -21,7 +21,8 @@
   <link rel="stylesheet" href="style.css">
   <script defer src="motion.js"></script>
   <script defer src="ementa.js"></script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Restaurant","name":"Hassan Kebab Center","url":"https://zgopalgy12-source.github.io/hassan-kebab-center/","telephone":"+351920112678","address":{"@type":"PostalAddress","streetAddress":"R. Dom Manuel I N 12 A","postalCode":"2810-255","addressLocality":"Almada","addressCountry":"PT"}}</script>
+  <script defer src="horario.js"></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Restaurant","name":"Hassan Kebab Center","url":"https://zgopalgy12-source.github.io/hassan-kebab-center/","telephone":"+351920112678","address":{"@type":"PostalAddress","streetAddress":"R. Dom Manuel I N 12 A","postalCode":"2810-255","addressLocality":"Almada","addressCountry":"PT"},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"12:00","closes":"00:00"}}</script>
 </head>
 <body id="inicio">
 <a class="skip" href="#ementa">Saltar para a ementa</a>
@@ -118,8 +119,7 @@
     <div><p class="label"><span></span>04 / Passa por cá</p><h2 id="visita-titulo">Até já,<br>Laranjeiro.</h2>
       <dl class="details">
         <div><dt>Morada</dt><dd><address><a href="https://www.google.com/maps/dir/?api=1&amp;destination=Hassan%20Kebab%20Center%2C%20R.%20Dom%20Manuel%20I%20N%2012%20A%2C%202810-255%20Almada">R. Dom Manuel I N 12 A<br>2810-255 Almada</a></address></dd></div>
-        <!-- TODO: Confirmar os dias de funcionamento antes de publicar openingHoursSpecification ou mostrar o estado em tempo real. -->
-        <div><dt>Horário</dt><dd><strong><time datetime="12:00">12:00</time> às <time datetime="00:00">00:00</time></strong><br>Dias a confirmar.</dd></div>
+        <div><dt>Horário</dt><dd><strong>Todos os dias · <time datetime="12:00">12:00</time> às <time datetime="00:00">00:00</time></strong><br><small id="estado-horario" role="status"></small></dd></div>
         <div><dt>Telefone</dt><dd><a href="tel:+351920112678">920 112 678</a></dd></div>
       </dl>
       <a class="button hot" href="https://www.google.com/maps/dir/?api=1&amp;destination=Hassan%20Kebab%20Center%2C%20R.%20Dom%20Manuel%20I%20N%2012%20A%2C%202810-255%20Almada">Traçar caminho</a>
